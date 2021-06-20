@@ -1,0 +1,9 @@
+<!-- Sidebar -->
+<div style="overflow: hidden;">
+    <app-chat-rooms [activeConversation]="activeConversation"></app-chat-rooms>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+<!-- Content -->
+<!-- <app-conversation [messages]="messages" (sendMessage)="sendMessage($event)"></app-conversation> -->

@@ -1,0 +1,25 @@
+<div id="main" class="main-container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="signupForm" name="signupform" id="loginform" class="wpl-track-me">
+        <h4>Sign Up</h4>
+        <p class="login-name">
+            <label for="user_login">Name</label>
+            <input type="text" formControlName="name" class="input" placeholder="Name">
+        </p>
+        <p class="login-email">
+            <label for="user_login">Email</label>
+            <input type="text" formControlName="email" class="input" placeholder="Email Address">
+        </p>
+        <p class="login-password">
+            <label for="user_pass">Password</label>
+            <input type="password" formControlName="password" class="input" placeholder="Password">
+        </p>
+        <p class="login-password">
+            <label for="user_pass">Confirm Password</label>
+            <input type="password" formControlName="confirmPassword" class="input" placeholder="Confirm Password">
+        </p>
+        <p class="login-submit">
+            <input type="submit" class="button-primary" [disabled]="signupForm.invalid" value="Sign Up">
+        </p>
+        <p class="bottom-info">Already a member? <span routerLink="/auth/signin"> Signin</span></p>
+    </form>
+</div>

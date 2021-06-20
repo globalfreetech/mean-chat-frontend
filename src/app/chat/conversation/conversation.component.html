@@ -1,0 +1,23 @@
+<ng-container>
+    <div class="chat" #commentEl [scrollTop]="scrolltop" *ngIf="messages.length">
+        <ng-container *ngFor="let msg of messages;let i = index">
+            <div class="mine messages" *ngIf="user._id == msg.senderInfo._id">
+                <div class="message">
+                    {{msg.message}}
+                </div>
+            </div>
+            <div class="yours messages" *ngIf="user._id != msg.senderInfo._id">
+                <div class="message">
+                    {{msg.message}}
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="send-message">
+        <div id="search">
+            <input id="input" (keyup.enter)="sendMessage()" [(ngModel)]="msg" spellcheck="false"
+                placeholder="Send message..." />
+            <i class="fa fa-paper-plane" (click)="sendMessage()"></i>
+        </div>
+    </div>
+</ng-container>

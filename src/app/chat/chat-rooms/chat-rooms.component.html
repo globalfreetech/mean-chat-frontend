@@ -1,0 +1,53 @@
+<aside class="sidebar">
+    <div class="top-bar">
+        <div class="user-info">
+            <img src="/assets/images/avatar.png" alt="">
+            <span>
+                <h5>{{user.name}}</h5>
+                <p>{{user.email}}</p>
+                <!-- <button (click)="emit()">emit</button> -->
+            </span>
+        </div>
+        <div class="logout">
+            <img src="/assets/images/search.png" (click)="isOpened = !isOpened" alt="">
+            <img src="/assets/images/logout.png" (click)="logout()" alt="">
+        </div>
+    </div>
+    <ul>
+        <li *ngFor="let room of chatRooms" (click)="roomClickEvent(room)" routerLink="/{{room._id}}" [ngClass]="{active: isActive == room._id}">
+            <div class="user-info">
+                <img src="/assets/images/avatar.png" alt="">
+                <span>
+                    <h5>{{room.userOne._id == user._id ? room.userTwo.name : room.userOne.name}}</h5>
+                    <p>{{room.message?.length? room.message[0].message : 'Start Chating'}}</p>
+                </span>
+            </div>
+            <div class="date">
+                <p>{{room.createdAt | timeago:live}}</p>
+            </div>
+        </li>
+    </ul>
+</aside>
+
+<!-- Modal -->
+<div class="modale" [ngClass]="{opened: isOpened}">
+    <div class="modale-dialog">
+        <div class="modale-body">
+            <i class="fa fa-times" (click)="isOpened = !isOpened;searchKeyword = null"></i>
+            <div id="search">
+                <input id="input" [(ngModel)]="searchKeyword" spellcheck="false" placeholder="Search..." />
+                <button id="button" (click)="searchUsers()"><i class="fa fa-search"></i></button>
+            </div>
+            <div class="list">
+                <div class="user-card" *ngFor="let user of usersList">
+                    <div class="info">
+                        <h5>{{user.name}}</h5>
+                        <p>{{user.email}}</p>
+                    </div>
+                    <button (click)="createChatRoom(user)">Chat</button>
+                </div>
+                <p class="no-result" *ngIf="usersList?.length == 0">No user found!</p>
+            </div>
+        </div>
+    </div>
+</div>

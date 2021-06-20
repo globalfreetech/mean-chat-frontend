@@ -1,0 +1,137 @@
+.chat {
+  position: absolute;
+  width: calc(100vw - 21rem);
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow: auto;
+  height: -webkit-fill-available;
+  margin-bottom: 132px;
+}
+.chat::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  border-radius: 20px;
+  padding: 8px 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
+.yours {
+  align-items: flex-start;
+}
+
+.yours .message {
+  margin-right: 25%;
+  background-color: #eee;
+  position: relative;
+}
+
+.yours .message.last:before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  bottom: 0;
+  left: -7px;
+  height: 20px;
+  width: 20px;
+  background: #eee;
+  border-bottom-right-radius: 15px;
+}
+.yours .message.last:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: -10px;
+  width: 10px;
+  height: 20px;
+  background: white;
+  border-bottom-right-radius: 10px;
+}
+
+.mine {
+  align-items: flex-end;
+}
+
+.mine .message {
+  color: white;
+  margin-left: 25%;
+  background: linear-gradient(to bottom, #00d0ea 0%, #0085d1 100%);
+  background-attachment: fixed;
+  position: relative;
+}
+
+.mine .message.last:before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  bottom: 0;
+  right: -8px;
+  height: 20px;
+  width: 20px;
+  background: linear-gradient(to bottom, #00d0ea 0%, #0085d1 100%);
+  background-attachment: fixed;
+  border-bottom-left-radius: 15px;
+}
+
+.mine .message.last:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  right: -10px;
+  width: 10px;
+  height: 20px;
+  background: white;
+  border-bottom-left-radius: 10px;
+}
+
+.send-message {
+  display: flex;
+  justify-content: center;
+  #search {
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 100);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    text-align: center;
+    background: #6588de;
+    border-radius: 10px;
+    margin: 2em 0;
+    padding: 2em;
+    transition: all 0.5s;
+    box-shadow: 0 29px 48px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+    display: flex;
+    align-items: center;
+    height: 80px;
+    input {
+      appearance: none;
+      background: transparent;
+      border: 0;
+      color: #fff;
+      font: inherit;
+      outline: 0;
+      flex: 1;
+      height: 36px;
+      font-size: 18px;
+      &::placeholder {
+        color: #fff;
+      }
+      margin-right: 20px;
+    }
+    .fa-paper-plane {
+      color: #fff;
+      font-size: 1.6rem;
+    }
+  }
+}
