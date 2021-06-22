@@ -1,13 +1,14 @@
 import { Component, ElementRef, OnInit, ViewChild, AfterViewChecked, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ChatService } from 'src/app/shared/services/chat.service';
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-conversation',
   templateUrl: './conversation.component.html',
   styleUrls: ['./conversation.component.scss']
 })
-export class ConversationComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class ConversationComponent implements OnInit, AfterViewChecked {
   @ViewChild('commentEl') comment: ElementRef;
   scrolltop: number = null;
   msg: string = null;
@@ -19,6 +20,7 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
   constructor(
     private _chatService: ChatService,
     private route: ActivatedRoute,
+    private socket: Socket
   ) {
     this.route.params.subscribe((params: Params) => {
       if (params.roomId) {
@@ -29,16 +31,8 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
   }
 
   ngOnInit() {
-    this.interval = setInterval(() => {
-      this.getChatRoomData(this.clickedRoom["_id"]);
-    }, 5000);
+    this.socketFunctions();
     this.scrollToBottom();
-  }
-
-  ngOnDestroy() {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
   }
 
   ngAfterViewChecked() {
@@ -51,6 +45,16 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
     } catch (err) { }
   }
 
+  socketFunctions() {
+    this.socket.on("getMessages", (messages) => {
+      console.log(messages);
+      if (messages.data.length) {
+        if (this.clickedRoom["_id"] == messages.data[0].chatRoomId) {
+          this.messages = messages.data;
+        }
+      }
+    })
+  }
 
   getChatRoomData(roomId) {
     let data = {
@@ -73,9 +77,13 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
       message: this.msg
     }
     this._chatService.sendMessage(data).subscribe((res: any) => {
-      this.messages = res.data
       this.msg = null;
-      this.getChatRoomData(this.clickedRoom["_id"]);
+      let data = {
+        chatRoomId: this.clickedRoom["_id"],
+        receiverId: this.clickedRoom["userOne"]["_id"] == this.user._id ? this.clickedRoom["userTwo"]["_id"] : this.clickedRoom["userOne"]["_id"],
+      }
+      this.getChatRoomData(this.clickedRoom["_id"])
+      this.socket.emit("sendMessage", data)
     }, (err: any) => {
       this.messages = [];
       console.log(err);

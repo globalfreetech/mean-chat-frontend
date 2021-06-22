@@ -1,7 +1,7 @@
 <aside class="sidebar">
     <div class="top-bar">
         <div class="user-info">
-            <img src="/assets/images/avatar.png" alt="">
+            <img src="assets/images/avatar.png" alt="">
             <span>
                 <h5>{{user.name}}</h5>
                 <p>{{user.email}}</p>
@@ -9,16 +9,17 @@
             </span>
         </div>
         <div class="logout">
-            <img src="/assets/images/search.png" (click)="isOpened = !isOpened" alt="">
-            <img src="/assets/images/logout.png" (click)="logout()" alt="">
+            <img src="assets/images/search.png" (click)="isOpened = !isOpened" alt="">
+            <img src="assets/images/logout.png" (click)="logout()" alt="">
         </div>
     </div>
     <ul>
         <li *ngFor="let room of chatRooms" (click)="roomClickEvent(room)" routerLink="/{{room._id}}" [ngClass]="{active: isActive == room._id}">
             <div class="user-info">
-                <img src="/assets/images/avatar.png" alt="">
+                <img src="assets/images/avatar.png" alt="">
+                <img class="status" [src]="checkForOnlineOffline(room)" alt="">
                 <span>
-                    <h5>{{room.userOne._id == user._id ? room.userTwo.name : room.userOne.name}}</h5>
+                    <h5>{{room.userOne._id == user._id ? room.userTwo.name : room.userOne.name}} </h5>
                     <p>{{room.message?.length? room.message[0].message : 'Start Chating'}}</p>
                 </span>
             </div>

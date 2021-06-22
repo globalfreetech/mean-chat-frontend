@@ -17,7 +17,7 @@ export class ChatRoomsComponent implements OnInit, OnChanges {
   usersList: any = null;
   user = JSON.parse(localStorage.getItem('user'))
   chatRooms: any = [];
-  chatRoomsSocket = this.socket.fromEvent<string[]>('chatRooms');
+  onlineUsers: [] = [];
 
   constructor(
     private router: Router,
@@ -29,9 +29,7 @@ export class ChatRoomsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.listChatRooms();
-    this.socket.on('new-message', function (data) {
-      console.log(data);
-    })
+    this.socketFunctions();
   }
 
   ngOnChanges(changes: { [propName: string]: SimpleChange }) {
@@ -40,14 +38,41 @@ export class ChatRoomsComponent implements OnInit, OnChanges {
     }
   }
 
-  emit() {
-    this.socket.emit('save-message', { userId: this.user._id });
+  socketFunctions() {
+    this.socket.emit("addUser", this.user?._id)
+    this.socket.on("getOnlineUsers", (users) => {
+      this.onlineUsers = users;
+    })
+    this.socket.on("chatRooms", (chatRooms) => {
+      this.chatRooms = chatRooms.data;
+    })
   }
 
+  checkForOnlineOffline(room) {
+    
+    if(this.user._id !== room.userOne._id) {
+      let user = this.onlineUsers.filter((user:any) => user.userId === room.userOne._id)
+      if(user.length) {
+        return "assets/images/online.png";
+      }else {
+        return "assets/images/offline.png";
+      }
+    }
+
+    if(this.user._id !== room.userTwo._id) {
+      let user = this.onlineUsers.filter((user:any) => user.userId === room.userTwo._id)
+      if(user.length) {
+        return "assets/images/online.png";
+      }else {
+        return "assets/images/offline.png";
+      }
+    }
+  }
   // LOGOUT
   logout() {
     localStorage.clear();
     this.router.navigateByUrl('/auth/signin')
+    this.socket.emit("disconnectUser",null)
   }
 
   // SEARCH USER
@@ -65,6 +90,9 @@ export class ChatRoomsComponent implements OnInit, OnChanges {
     }
     this._chatService.createChatRoom(data).subscribe((res: any) => {
       alert(res.message);
+      this.isOpened = !this.isOpened;
+      this.listChatRooms();
+      this.socket.emit("createRoom", user._id)
     }, (err: any) => {
       alert(err.error.message);
     })
@@ -78,7 +106,7 @@ export class ChatRoomsComponent implements OnInit, OnChanges {
     })
   }
 
-  roomClickEvent(room){
-    localStorage.setItem("room",JSON.stringify(room))
+  roomClickEvent(room) {
+    localStorage.setItem("room", JSON.stringify(room))
   }
 }
